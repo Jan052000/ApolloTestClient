@@ -19,7 +19,7 @@ interface TreeNode {
 export class TreeComponent implements OnInit {
 
   private listOfBooks: Array<string> = [];
-  public selectedNode: any;
+  public selectedNode: TreeNode | undefined;
   public dataSource = new MatTreeNestedDataSource<TreeNode>();
   public treeControl = new NestedTreeControl<TreeNode>(node => node.children);
   
@@ -77,7 +77,11 @@ export class TreeComponent implements OnInit {
   // }
 
   select(node: TreeNode){
-    console.log(node);
-    this.selectedNode = node;
+    if(this.selectedNode == node){
+      this.selectedNode = undefined;
+    }else{
+      console.log(node);
+      this.selectedNode = node;
+    }
   }
 }
