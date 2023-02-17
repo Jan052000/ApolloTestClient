@@ -8,7 +8,8 @@ interface TreeNode {
   spells?: GraphQLClasses.Spell[];
   name: string;
   children?: TreeNode[];
-  data?: any;
+  data?: GraphQLClasses.Spell;
+  parent?: TreeNode;
 }
 
 @Component({
@@ -56,7 +57,9 @@ export class TreeComponent implements OnInit {
       children: []
     };
     spellList.spell.forEach(spell => test.children!.push({
-      name: spell.name
+      name: spell.name,
+      parent: test,
+      data: spell
     }));
     return test;
   }
