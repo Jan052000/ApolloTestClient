@@ -18,3 +18,7 @@ body {
 .mat-tab-body-wrapper{
   height: 100%;
 }
+.mat-drawer-backdrop.mat-drawer-shown{
+  //background-color: rgb(0, 0, 0 ,.75) !important;
+  background-color: white !important;
+}
