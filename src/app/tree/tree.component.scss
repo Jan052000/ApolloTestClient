@@ -1,0 +1,24 @@
+.tree-invisible{
+    display: none;
+}
+.test .mat-nested-tree-node .nested-node{
+    padding-left: 40px;
+}
+.test div[role=group] .mat-tree-node{
+    padding-left: 40px;
+}
+.test .mat-nested-tree-node div[role=group]{
+    padding-left: 40px;
+}
+.disable-text-select{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.test .mat-tree-node{
+    cursor: pointer;
+}
+.highlight::ng-deep{
+    background-color: rgb(214, 214, 214) !important;
+}
