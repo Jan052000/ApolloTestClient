@@ -19,16 +19,6 @@ export class CustomQueryService {
 
   getListOfBooks(): Observable<any>{
     this.query = `
-      query {
-        QueryAll {
-          spell {
-            name
-          }
-        }
-      }
-    `;
-
-    this.query = `
       query Test{
         GetTables
       }
@@ -69,10 +59,10 @@ export class CustomQueryService {
             type
           },
           classes {
-            formClassList {
+            fromClassList {
               name
             },
-            formClassListVariant {
+            fromClassListVariant {
               name
             }
           },
