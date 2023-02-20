@@ -1,0 +1,16 @@
+.block-layout{
+    display: inline-block;
+}
+
+.spacer{
+    padding-right: 100%;
+}
+
+.box{
+    border: 1px;
+    border-style: solid;
+}
+
+.mat-card-content > div{
+    border-style: none;
+}

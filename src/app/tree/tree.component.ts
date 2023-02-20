@@ -4,11 +4,11 @@ import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { CustomQueryService } from '../CustomQueryService/custom-query.service';
 import * as GraphQLClasses from './../../../graphql';
 
-interface TreeNode {
+export interface TreeNode {
   spells?: GraphQLClasses.Spell[];
   name: string;
   children?: TreeNode[];
-  data?: GraphQLClasses.Spell;
+  data?: any;//GraphQLClasses.Spell;
   parent?: TreeNode;
 }
 
@@ -29,18 +29,18 @@ export class TreeComponent implements OnInit {
 
   ngOnInit(): void {
     this.queryService.getListOfBooks().subscribe(res => {
-      console.log(res);
+      //console.log(res);
       res.data.GetTables.forEach((book: string) => {
         this.listOfBooks.push(book);
       });
       this.queryService.getDataForBooks(res.data.GetTables)?.subscribe((result) => {
-        console.log(result.data);
+        //console.log(result.data);
         let data: TreeNode[] = []
         this.listOfBooks.forEach(book => {
           data.push(this.generateNode(result.data[book], book));
         });
         this.dataSource.data = data;
-        console.log(this.dataSource.data);
+        //console.log(this.dataSource.data);
       });
     });
   }

@@ -1,0 +1,26 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{ cardContent.name }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <ng-template #nodeTemplateRef let-node="node">
+            <div class="box">
+                <mat-label *ngIf="!isNumber(node.displayText) && node.children.length > 0 && !isName(node.isName)" class="spacer">{{ node.displayText }}</mat-label>
+                <div class="block-layout">
+                    <mat-form-field appearance="fill" floatLabel="always" *ngIf="node.value != undefined">
+                        <mat-label>{{ node.displayText }}</mat-label>
+                        <textarea matInput 
+                        cdkTextareaAutosize 
+                        cdkAutosizeMinRows="1">{{ node.value }}</textarea>
+                    </mat-form-field>
+                    <ng-template ngFor let-child [ngForOf]="node.children">
+                        <ng-template [ngTemplateOutlet]="nodeTemplateRef" [ngTemplateOutletContext]="{ node: child }"></ng-template>
+                    </ng-template>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="nodeTemplateRef" [ngTemplateOutletContext]="{ node: cardData}"></ng-template>
+    </mat-card-content>
+</mat-card>
+
+

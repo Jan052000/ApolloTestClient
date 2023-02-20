@@ -13,3 +13,10 @@
 .mat-tab-group{
     height: 100%;
 }
+
+.scrollable{
+    overflow: hidden;
+    overflow-y: auto;
+    height: calc(100vh - 49px);
+    // width: 50%;
+}

@@ -1,19 +1,13 @@
 <mat-tab-group>
     <mat-tab label="DND Spells">
-        <!-- <mat-drawer-container>
-            <mat-drawer mode="side" opened class="tree-container">
-                <app-tree></app-tree>
-            </mat-drawer>
-            <mat-drawer-content>
-                abcde
-            </mat-drawer-content>
-        </mat-drawer-container> -->
-        <mat-sidenav-container class="tree-test">
-            <mat-sidenav opened [disableClose]="true" class="tree-container" [mode]="'over'">
-                <app-tree></app-tree>
+        <mat-sidenav-container class="tree-test" [hasBackdrop]="false">
+            <mat-sidenav opened [disableClose]="true" class="tree-container" [mode]="'push'">
+                <app-tree #TreeView></app-tree>
             </mat-sidenav>
             <mat-sidenav-content>
-                abcdefghijk
+                <div class="scrollable">
+                    <app-data-card *ngIf="TreeView.selectedNode != undefined" [cardContent]="TreeView.selectedNode" cdkScrollable></app-data-card>
+                </div>
             </mat-sidenav-content>
         </mat-sidenav-container>
     </mat-tab>

@@ -4,10 +4,12 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
 //Disable selection in tab label
 .mat-tab-label {
     -webkit-user-select: none;
@@ -15,10 +17,13 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
+
 .mat-tab-body-wrapper{
   height: 100%;
 }
+
 .mat-drawer-backdrop.mat-drawer-shown{
   //background-color: rgb(0, 0, 0 ,.75) !important;
-  background-color: white !important;
+  background-color: transparent !important;
+  display: none;
 }
