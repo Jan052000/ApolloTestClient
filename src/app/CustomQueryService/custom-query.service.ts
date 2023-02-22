@@ -44,6 +44,7 @@ export class CustomQueryService {
       `{
         spell {
           name,
+          entries,
           source,
           page,
           level,
