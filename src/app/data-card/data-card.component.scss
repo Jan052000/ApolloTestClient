@@ -14,3 +14,36 @@
 .mat-card-content > div{
     border-style: none;
 }
+
+.mat-form-field{
+    width: 100%;
+}
+
+.block-layout div > div{
+    border-bottom: none;
+    border-left: none;
+}
+
+.mat-card-content > div.box {
+    border-top: none;
+}
+
+.mat-card-content > div.box  >div.block-layout > div{
+    border-top: none;
+}
+
+.mat-card-content > div.box  >div.block-layout > div:first-child{
+    border: 1px;
+    border-style: solid;
+}
+
+.mat-card-content > div.box > div.block-layout > div.box > div.block-layout > div.box:only-of-type > div.block-layout > div.box{
+    border-top: none;
+    border-right: none;
+}
+
+.mat-card-content > div.box > div.block-layout > div.box > div.block-layout > div.box  div.box:only-child{
+    border-top: none;
+    border-right: none;
+}
+// .mat-card-content > div.box > div.block-layout > div.box > div.block-layout > div.box:only-child > div.block-layout > div.box

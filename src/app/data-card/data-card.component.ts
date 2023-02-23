@@ -44,7 +44,12 @@ export class DataCardComponent implements OnInit, OnChanges {
       node.children = [];
       Object.keys(obj).forEach((key) => {
         if (typeof obj[key] == 'object') {
-          node.children?.push(this.parseObjectToNode(key, obj[key]));
+          if(obj.constructor.name == 'Array'){
+            node.children.push(this.parseObjectToNode('', obj[key]))
+          }else{
+            node.children?.push(this.parseObjectToNode(key, obj[key]));
+          }
+          // node.children?.push(this.parseObjectToNode(key, obj[key]));
         } else {
           node.children?.push({
             displayText: key,
