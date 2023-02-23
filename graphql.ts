@@ -94,7 +94,7 @@ export type Spell = {
   components?: Maybe<Component>;
   damageInflict?: Maybe<Array<Maybe<Scalars['String']>>>;
   duration?: Maybe<Array<Maybe<Duration>>>;
-  entries?: Maybe<Array<Maybe<Entry>>>;
+  entries?: Maybe<Array<Maybe<'String'>>>;
   entriesHigherLevel?: Maybe<Array<Maybe<Entry>>>;
   level: Scalars['Int'];
   miscTags?: Maybe<Array<Maybe<Scalars['String']>>>;
