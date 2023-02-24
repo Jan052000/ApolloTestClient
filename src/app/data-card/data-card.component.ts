@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
-import { TreeNode } from '../tree/tree.component';
+import { TreeNode } from '../Classes/tree-node';
 
 interface DataNode {
   displayText: string;
@@ -25,7 +25,6 @@ export class DataCardComponent implements OnInit, OnChanges {
       //Object.keys(this.cardContent.data!).forEach(key => console.log(key, this.cardContent.data![key], typeof(this.cardContent.data![key])));
       this.cardData = this.parseObjectToNode(this.cardContent.name, this.cardContent.data, true);
     }
-    console.log(this.cardData);
   }
 
   ngOnChanges(){

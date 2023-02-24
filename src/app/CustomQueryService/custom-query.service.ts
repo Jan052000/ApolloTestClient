@@ -12,28 +12,29 @@ const httpOptions = {
 })
 export class CustomQueryService {
 
+  /**URL to Apollo server */
   private configURI = "http://localhost:4000";
-  private query: any;//string | undefined;
 
   constructor(private httpClient: HttpClient) { }
 
+  /**
+   * Gets a lit of available books
+   * @returns Observable list containing the names of all boos on the server
+   */
   getListOfBooks(): Observable<any>{
-    this.query = `
+    let query = `
       query Test{
         GetTables
       }
     `;
-    // return this.httpClient.post(this.configURI, JSON.stringify({query: "query Test{\r\n  GetTables\r\n}", operationName: 'Test', variables: {}}), httpOptions);
-
-    return this.httpClient.post(this.configURI, JSON.stringify({query: this.query, operationName: 'Test', variables: {}}), httpOptions);
-
-    // return this.httpClient.post(this.configURI, JSON.stringify({query: buildSchema(`
-    //   query GetTables {
-    //     GetTables
-    //   }
-    // `), operationName: 'QueryAll', variables: {}}), httpOptions);
+    return this.httpClient.post(this.configURI, JSON.stringify({query: query, operationName: 'Test', variables: {}}), httpOptions);
   }
 
+  /**
+   * Gets data for a list of books
+   * @param books List of books to query the server for
+   * @returns Object containing the content of the given list of books
+   */
   getDataForBooks(books: Array<string> | undefined = undefined): Observable<any> | null{
     let query = `query Query {\n`;
     if(books === undefined){

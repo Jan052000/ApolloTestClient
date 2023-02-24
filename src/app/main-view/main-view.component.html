@@ -2,7 +2,7 @@
     <mat-tab label="DND Spells">
         <mat-sidenav-container class="tree-test" [hasBackdrop]="false">
             <mat-sidenav opened [disableClose]="true" class="tree-container" [mode]="'push'">
-                <app-tree #TreeView></app-tree>
+                <app-tree #TreeView [dataService]="SpellBookService"></app-tree>
             </mat-sidenav>
             <mat-sidenav-content>
                 <div class="scrollable">

@@ -1,16 +1,8 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
-import { CustomQueryService } from '../CustomQueryService/custom-query.service';
-import * as GraphQLClasses from './../../../graphql';
-
-export interface TreeNode {
-  spells?: GraphQLClasses.Spell[];
-  name: string;
-  children?: TreeNode[];
-  data?: any;//GraphQLClasses.Spell;
-  parent?: TreeNode;
-}
+import { IDataService } from '../Classes/idata-service';
+import { TreeNode } from '../Classes/tree-node';
 
 @Component({
   selector: 'app-tree',
@@ -19,66 +11,40 @@ export interface TreeNode {
 })
 export class TreeComponent implements OnInit {
 
-  private listOfBooks: Array<string> = [];
+  /**Service to pull the data from */
+  @Input() dataService?: IDataService;
+
+  /**Selected node */
   public selectedNode: TreeNode | undefined;
+  /**DataSource for the tree */
   public dataSource = new MatTreeNestedDataSource<TreeNode>();
+  /**TreeControl for the tree */
   public treeControl = new NestedTreeControl<TreeNode>(node => node.children);
   
-  constructor(public queryService: CustomQueryService) {
+  constructor() {
   }
 
   ngOnInit(): void {
-    this.queryService.getListOfBooks().subscribe(res => {
-      //console.log(res);
-      res.data.GetTables.forEach((book: string) => {
-        this.listOfBooks.push(book);
-      });
-      this.queryService.getDataForBooks(res.data.GetTables)?.subscribe((result) => {
-        //console.log(result.data);
-        let data: TreeNode[] = []
-        this.listOfBooks.forEach(book => {
-          data.push(this.generateNode(result.data[book], book));
-        });
-        this.dataSource.data = data;
-        //console.log(this.dataSource.data);
-      });
+    if(this.dataService == undefined || this.dataService == null){
+      throw(new Error('Data service is undefined!'));
+    }
+    this.dataService.DataObservable.subscribe(data => {
+      this.dataSource.data = data
     });
   }
 
   /**
-   * generates a node of book containing nodes of spells
-   * @param spellList Object of book to create node for
-   * @param name name to be displayed in node
-   * @returns filled node
+   * Checks if the node has children
+   * @param _ auto filled index
+   * @param node node to check
+   * @returns if the node has children
    */
-  generateNode(spellList: GraphQLClasses.Spells, name: string): TreeNode{
-    let test: TreeNode = {
-      name: name,
-      children: []
-    };
-    spellList.spell.forEach(spell => test.children!.push({
-      name: spell.name,
-      parent: test,
-      data: spell
-    }));
-    return test;
-  }
-  
   hasChild = (_: number, node: TreeNode) => !!node.children && node.children.length > 0;
 
-  // click() {
-  //   this.queryService.getListOfBooks().subscribe(res => {
-  //     console.log(res);
-  //     res.data.GetTables.forEach((book: string) => {
-  //       this.listOfBooks.push(book);
-  //     });
-  //     this.queryService.getDataForBooks(res.data.GetTables)?.subscribe((result: GraphQLClasses.SpellList[]) => {
-  //       console.log(result);
-  //     });
-  //   });
-
-  // }
-
+  /**
+   * Selects a node
+   * @param node node to be selected
+   */
   select(node: TreeNode){
     if(this.selectedNode == node){
       this.selectedNode = undefined;
