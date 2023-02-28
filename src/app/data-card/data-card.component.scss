@@ -46,4 +46,9 @@
     border-top: none;
     border-right: none;
 }
+
+.mat-card-content > div.box > div.block-layout > div.box > div.block-layout > div.box:has(> div.block-layout:empty){
+    border: none;
+    display: none;
+}
 // .mat-card-content > div.box > div.block-layout > div.box > div.block-layout > div.box:only-child > div.block-layout > div.box
