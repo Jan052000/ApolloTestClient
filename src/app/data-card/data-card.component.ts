@@ -1,12 +1,6 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { DataNode } from '../Classes/data-node';
 import { TreeNode } from '../Classes/tree-node';
-
-interface DataNode {
-  displayText: string;
-  children: DataNode[];
-  value?: any;
-  isName?: boolean | undefined;
-}
 
 @Component({
   selector: 'app-data-card',
@@ -20,15 +14,23 @@ export class DataCardComponent implements OnInit, OnChanges {
 
   constructor() {}
 
-  ngOnInit(): void {
-    if (this.cardContent.data != undefined) {
-      //Object.keys(this.cardContent.data!).forEach(key => console.log(key, this.cardContent.data![key], typeof(this.cardContent.data![key])));
-      this.cardData = this.parseObjectToNode(this.cardContent.name, this.cardContent.data, true);
-    }
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(){
-    this.cardData = this.parseObjectToNode(this.cardContent.name, this.cardContent.data, true);
+    if(this.cardContent.data != undefined && this.cardContent.data != null){
+      this.cardData = this.parseObjectToNode(this.cardContent.name, this.cardContent.data, true);
+    }else{
+      this.cardData = {
+        displayText: 'Spells',
+        children: [],
+        isName: true
+      }
+      this.cardContent.children?.forEach(child => this.cardData.children.push({
+        displayText: 'Name',
+        value: child.name,
+        children: []
+      }))
+    }
     console.log(this.cardData);
   }
 
