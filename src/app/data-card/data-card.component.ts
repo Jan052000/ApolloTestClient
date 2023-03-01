@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DataNode } from '../Classes/data-node';
 import { TreeNode } from '../Classes/tree-node';
 
@@ -7,16 +7,10 @@ import { TreeNode } from '../Classes/tree-node';
   templateUrl: './data-card.component.html',
   styleUrls: ['./data-card.component.scss'],
 })
-export class DataCardComponent implements OnInit, OnChanges {
-  @Input() cardContent!: TreeNode;
-  public editMode: boolean = false;
-  public cardData!: DataNode;
-
-  constructor() {}
-
-  ngOnInit(): void {}
-
-  ngOnChanges(){
+export class DataCardComponent implements OnInit{
+  private _cardContent?: TreeNode;
+  @Input() set cardContent(data: TreeNode){
+    this._cardContent = data;
     if(this.cardContent.data != undefined && this.cardContent.data != null){
       this.cardData = this.parseObjectToNode(this.cardContent.name, this.cardContent.data, true);
     }else{
@@ -33,6 +27,15 @@ export class DataCardComponent implements OnInit, OnChanges {
     }
     console.log(this.cardData);
   }
+  get cardContent(): TreeNode{
+    return this._cardContent!;
+  }
+  public editMode: boolean = false;
+  public cardData!: DataNode;
+
+  constructor() {}
+
+  ngOnInit(): void {}
 
   parseObjectToNode(name: string, obj: any, isName: boolean | undefined = undefined): DataNode {
     let node: DataNode = {

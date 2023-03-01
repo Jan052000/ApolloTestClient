@@ -2,11 +2,11 @@
     <mat-tab label="DND Spells">
         <mat-sidenav-container class="tree-test" [hasBackdrop]="false">
             <mat-sidenav opened [disableClose]="true" class="tree-container" [mode]="'push'">
-                <app-tree #TreeView [dataService]="SpellBookService"></app-tree>
+                <app-tree #TreeView [dataService]="SpellBookService" (onSelectionChanged)="setCardData($event)"></app-tree>
             </mat-sidenav>
             <mat-sidenav-content>
                 <div class="scrollable">
-                    <app-data-card *ngIf="TreeView.selectedNode != undefined" [cardContent]="TreeView.selectedNode" cdkScrollable></app-data-card>
+                    <app-data-card *ngIf="TreeView.selectedNode != undefined" [cardContent]="treeSelectedNode" cdkScrollable></app-data-card>
                 </div>
             </mat-sidenav-content>
         </mat-sidenav-container>

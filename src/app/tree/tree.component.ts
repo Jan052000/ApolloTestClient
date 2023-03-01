@@ -1,5 +1,5 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
@@ -13,9 +13,10 @@ export class TreeComponent implements OnInit {
 
   /**Service to pull the data from */
   @Input() dataService?: IDataService;
-
+  /**Event for selection changed */
+  @Output() onSelectionChanged = new EventEmitter<TreeNode>();
   /**Selected node */
-  public selectedNode: TreeNode | undefined;
+  public selectedNode?: TreeNode;
   /**DataSource for the tree */
   public dataSource = new MatTreeNestedDataSource<TreeNode>();
   /**TreeControl for the tree */
@@ -52,5 +53,6 @@ export class TreeComponent implements OnInit {
       console.log(node);
       this.selectedNode = node;
     }
+    this.onSelectionChanged.next(node);
   }
 }
