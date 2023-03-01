@@ -19,16 +19,13 @@ export class SpellBooksService implements IDataService {
 
   constructor(public queryService: CustomQueryService) {
     this.queryService.getListOfBooks().subscribe(res => {
-      //console.log(res);
       res.data.GetTables.forEach((book: string) => {
         this.listOfBooks.push(book);
       });
       this.queryService.getDataForBooks(res.data.GetTables)?.subscribe((result) => {
-        //console.log(result.data);
         this.listOfBooks.forEach(book => {
           this.DataObject.push(this.generateNode(result.data[book], book));
         });
-        //console.log(this.dataSource.data);
         this.DataObservable.next(this.DataObject);
       });
     });

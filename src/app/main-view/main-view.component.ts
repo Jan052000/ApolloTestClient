@@ -12,6 +12,7 @@ export class MainViewComponent implements OnInit {
 
   /**Service for spell book data */
   public SpellBookService?: SpellBooksService;
+  /**Selected node from tree */
   public treeSelectedNode!: TreeNode;
 
   constructor(public customQueryService: CustomQueryService) {
@@ -26,7 +27,6 @@ export class MainViewComponent implements OnInit {
    * @param node selected node
    */
   public setCardData(node: TreeNode){
-    // console.log('test', node);
     this.treeSelectedNode = node;
   }
 
