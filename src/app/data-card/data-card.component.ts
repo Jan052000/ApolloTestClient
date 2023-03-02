@@ -28,6 +28,7 @@ export class DataCardComponent implements OnInit{
       }))
     }
     console.log(this.cardData);
+    this.readonly = true;
   }
   get cardContent(): TreeNode{
     return this._cardContent!;
@@ -95,5 +96,10 @@ export class DataCardComponent implements OnInit{
     if(input != undefined)
       return input;
     return false;
+  }
+
+  /**Click function for edit button */
+  public editButtonPressed(){
+    this.readonly = !this.readonly;
   }
 }

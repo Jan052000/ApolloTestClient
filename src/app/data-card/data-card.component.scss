@@ -51,4 +51,26 @@
     border: none;
     display: none;
 }
+
+.mat-card > button:first-of-type{
+    right: 0px;
+}
+
+.sticky-container{
+    display: flex;
+    justify-content: flex-end;
+    position: sticky;
+    bottom: 25px;
+}
+
+.sticky{
+    position: sticky;
+    bottom: 25px;
+}
+
+mat-card{
+    width: calc(100% - 266px - 32px);
+}
+
+
 // .mat-card-content > div.box > div.block-layout > div.box > div.block-layout > div.box:only-child > div.block-layout > div.box

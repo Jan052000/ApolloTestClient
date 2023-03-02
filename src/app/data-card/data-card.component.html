@@ -9,8 +9,9 @@
                 <div class="block-layout">
                     <mat-form-field appearance="fill" floatLabel="always" *ngIf="node.value != undefined">
                         <mat-label>{{ node.displayText }}</mat-label>
-                        <textarea matInput 
-                        cdkTextareaAutosize 
+                        <textarea matInput
+                        [readonly]="readonly"
+                        cdkTextareaAutosize
                         cdkAutosizeMinRows="1">{{ node.value }}</textarea>
                     </mat-form-field>
                     <ng-template ngFor let-child [ngForOf]="node.children">
@@ -21,6 +22,12 @@
         </ng-template>
         <ng-template [ngTemplateOutlet]="nodeTemplateRef" [ngTemplateOutletContext]="{ node: cardData}"></ng-template>
     </mat-card-content>
+    <div class="sticky-container">
+        <button mat-raised-button color="primary" (click)="editButtonPressed()" class="sticky">
+            <mat-icon *ngIf="readonly">edit</mat-icon>
+            <mat-icon *ngIf="!readonly">save</mat-icon>
+        </button>
+    </div>
 </mat-card>
 
 
