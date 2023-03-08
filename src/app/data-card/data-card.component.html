@@ -12,7 +12,7 @@
                         <textarea matInput [formControl]="registerFormControl(node)"
                         [readonly]="readonly"
                         cdkTextareaAutosize
-                        cdkAutosizeMinRows="1">{{ node.value }}</textarea>
+                        cdkAutosizeMinRows="1"></textarea>
                     </mat-form-field>
                     <ng-template ngFor let-child [ngForOf]="node.children">
                         <ng-template [ngTemplateOutlet]="nodeTemplateRef" [ngTemplateOutletContext]="{ node: child }"></ng-template>

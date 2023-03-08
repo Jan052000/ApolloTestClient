@@ -3,4 +3,5 @@ export interface DataNode {
     children: DataNode[];
     value?: any;
     isName?: boolean | undefined;
+    dataPath?: string[];
   }

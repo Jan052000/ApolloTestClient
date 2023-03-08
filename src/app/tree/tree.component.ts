@@ -50,7 +50,7 @@ export class TreeComponent implements OnInit {
     if(this.selectedNode == node){
       this.selectedNode = undefined;
     }else{
-      console.log(node);
+      // console.log(node);
       this.selectedNode = node;
     }
     this.onSelectionChanged.next(node);

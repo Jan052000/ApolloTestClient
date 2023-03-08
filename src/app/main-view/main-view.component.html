@@ -6,7 +6,7 @@
             </mat-sidenav>
             <mat-sidenav-content>
                 <div class="scrollable">
-                    <app-data-card *ngIf="TreeView.selectedNode != undefined" [cardContent]="treeSelectedNode" cdkScrollable></app-data-card>
+                    <app-data-card *ngIf="TreeView.selectedNode != undefined" [cardContent]="treeSelectedNode" cdkScrollable [DataService]="SpellBookService"></app-data-card>
                 </div>
             </mat-sidenav-content>
         </mat-sidenav-container>

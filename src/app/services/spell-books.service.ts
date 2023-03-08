@@ -3,13 +3,12 @@ import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
 import * as GraphQLClasses from '../../../graphql';
 import { CustomQueryService } from '../CustomQueryService/custom-query.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SpellBooksService implements IDataService {
-
   /**The data to be emitted */
   public DataObservable: Subject<TreeNode[]> = new Subject<TreeNode[]>();
   /**Internal list of book names */
@@ -18,35 +17,52 @@ export class SpellBooksService implements IDataService {
   private DataObject: TreeNode[] = [];
 
   constructor(public queryService: CustomQueryService) {
-    this.queryService.getListOfBooks().subscribe(res => {
+    this.queryService.getListOfBooks().subscribe((res) => {
       res.data.GetTables.forEach((book: string) => {
         this.listOfBooks.push(book);
       });
-      this.queryService.getDataForBooks(res.data.GetTables)?.subscribe((result) => {
-        this.listOfBooks.forEach(book => {
-          this.DataObject.push(this.generateNode(result.data[book], book));
+      this.queryService
+        .getDataForBooks(res.data.GetTables)
+        ?.subscribe((result) => {
+          this.listOfBooks.forEach((book) => {
+            this.DataObject.push(this.generateNode(result.data[book], book));
+          });
+          this.DataObservable.next(this.DataObject);
         });
-        this.DataObservable.next(this.DataObject);
-      });
     });
-   }
-  
+  }
+
+  UpdateValues() {
+    throw new Error('Method not implemented.');
+  }
+
   /**
    * generates a node of book containing nodes of spells
    * @param spellList Object of book to create node for
    * @param name name to be displayed in node
    * @returns filled node
    */
-  private generateNode(spellList: GraphQLClasses.Spells, name: string): TreeNode{
+  private generateNode(
+    spellList: GraphQLClasses.Spells,
+    name: string
+  ): TreeNode {
     let test: TreeNode = {
       name: name,
-      children: []
+      children: [],
     };
-    spellList.spell.forEach(spell => test.children!.push({
-      name: spell.name,
-      parent: test,
-      data: spell
-    }));
+    spellList.spell.forEach((spell) =>
+      test.children!.push({
+        name: spell.name,
+        parent: test,
+        data: spell,
+      })
+    );
     return test;
+  }
+
+  public EditSpell(
+    input: GraphQLClasses.MutationInputData
+  ): Observable<Response> {
+    return this.queryService.editBook(input);
   }
 }

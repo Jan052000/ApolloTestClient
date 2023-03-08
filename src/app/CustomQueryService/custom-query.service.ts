@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import * as SpellClasses from './../../../graphql';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -79,6 +80,115 @@ export class CustomQueryService {
     query = query.substring(0, query.length - 1);
     query += `\n}`;
     return this.httpClient.post(this.configURI, JSON.stringify({query: query, operationName: 'Query', variables: {}}), httpOptions);
+  }
+
+  private stringifyObject(input: any, string: string = '', tabs: number = 0): string {
+    Object.keys(input).forEach(key => {
+        if (typeof (input[key]) == 'object') {
+            if (input[key].constructor.name == 'Array') {
+                for (let i = 0; i < tabs; i++) {
+                    string += '\t';
+                }
+                string += key + ': [\n';
+                input[key].forEach((element: any) => {
+                    for (let i = 0; i < tabs; i++) {
+                        string += '\t';
+                    }
+                    switch (element.constructor.name) {
+                      case 'String':
+                          string += '"' + element + '",\n';
+                          break;
+                      case 'Object':
+                          for (let i = 0; i < tabs; i++) {
+                              string += '\t';
+                          }
+                          string += '{\n';
+                          for (let i = 0; i < tabs + 1; i++) {
+                              string += '\t';
+                          }
+                          string += this.stringifyObject(element, '', tabs);
+                          for (let i = 0; i < tabs; i++) {
+                              string += '\t';
+                          }
+                          string += '}\n';
+                          break;
+                      default:
+                          string += element + ',\n';
+                  }
+                });
+                for (let i = 0; i < tabs; i++) {
+                    string += '\t';
+                }
+                string += '],\n';
+            } else {
+                for (let i = 0; i < tabs; i++) {
+                    string += '\t';
+                }
+                string += key + ': {\n';
+                for (let i = 0; i < tabs; i++) {
+                    string += '\t';
+                }
+                string += this.stringifyObject(input[key], '', tabs + 1);
+                for (let i = 0; i < tabs; i++) {
+                    string += '\t';
+                }
+                string += '}\n';
+            }
+        } else {
+            for (let i = 0; i < tabs; i++) {
+                string += '\t';
+            }
+            if (typeof (input[key]) == 'string') {
+                string += key + ': "' + input[key] + '",\n';
+            } else {
+                string += key + ': ' + input[key] + ',\n';
+            }
+        }
+    });
+    return string;
+}
+
+  editBook(input: SpellClasses.MutationInputData): Observable<Response>{
+    let query = `mutation Mutation{
+      editSpell(data: {
+        `+ this.stringifyObject(input) +`
+      }) {
+        success,
+        message,
+        data {
+          name,
+          entries,
+          source,
+          page,
+          level,
+          school,
+          range {
+            type,
+            distance {
+              amount,
+              type
+            }
+          },
+          duration {
+            type
+          },
+          classes {
+            fromClassList {
+              name
+            },
+            fromClassListVariant {
+              name
+            }
+          },
+          time {
+            Int,
+            unit
+          }
+        }
+      }
+    }
+    `
+    return (<Observable<Response>>this.httpClient.post(this.configURI, JSON.stringify({operationName: 'Mutation', query: query, variables: {}}), httpOptions));
   }
 
   getSchema(): Observable<any>{
