@@ -9,7 +9,7 @@
                 <div class="block-layout">
                     <mat-form-field appearance="fill" floatLabel="always" *ngIf="node.value != undefined">
                         <mat-label>{{ node.displayText }}</mat-label>
-                        <textarea matInput
+                        <textarea matInput [formControl]="registerFormControl(node)"
                         [readonly]="readonly"
                         cdkTextareaAutosize
                         cdkAutosizeMinRows="1">{{ node.value }}</textarea>

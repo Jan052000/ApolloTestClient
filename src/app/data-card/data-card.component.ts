@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { DataNode } from '../Classes/data-node';
 import { TreeNode } from '../Classes/tree-node';
 
@@ -38,6 +39,7 @@ export class DataCardComponent implements OnInit{
   public cardData!: DataNode;
   /**Check if the textareas are readonly */
   public readonly = true;
+  public inputControls: {node: DataNode, control: FormControl}[] = [];
 
   constructor() {}
 
@@ -101,5 +103,34 @@ export class DataCardComponent implements OnInit{
   /**Click function for edit button */
   public editButtonPressed(){
     this.readonly = !this.readonly;
+    console.log(this.cardData)
+  }
+
+  /**
+   * Registers a FormControl for a node
+   * @param node reference to data node
+   * @returns formcontrol for node
+   */
+  public registerFormControl(node: DataNode): FormControl{
+    let found = this.inputControls.find(value => value.node === node);
+    if(found == undefined){
+      let control = new FormControl();
+      control.setValue(node.value, {
+        onlySelf: true,
+        emitEvent: false
+      })
+      control.valueChanges.subscribe({
+        next(value) {
+          console.log(node);
+          control.setValue(value, {
+            onlySelf: true,
+            emitEvent: false
+          })
+        }
+      });
+      this.inputControls.push({node: node, control: control});
+      return control;
+    }
+    return found.control;
   }
 }
