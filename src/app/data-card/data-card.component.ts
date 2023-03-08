@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { DataNode } from '../Classes/data-node';
 import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
-import { SpellBooksService } from '../services/spell-books.service';
+import * as GraphQLClasses from '../../../graphql';
 
 @Component({
   selector: 'app-data-card',
@@ -45,9 +46,16 @@ export class DataCardComponent implements OnInit{
   public cardData!: DataNode;
   /**Check if the textareas are readonly */
   public readonly = true;
+  /**List of form controls */
   public inputControls: {node: DataNode, control: FormControl}[] = [];
+  /**Subject for mutation responses */
+  public mutationResponses: Subject<GraphQLClasses.Response> = new Subject<GraphQLClasses.Response>()
 
-  constructor() {}
+  constructor() {
+    this.mutationResponses.subscribe((response) => {
+      console.log(response);
+    });
+  }
 
   ngOnInit(): void {}
 
@@ -139,11 +147,7 @@ export class DataCardComponent implements OnInit{
       });
       if(Object.keys(input.data).length == 0)
         return;
-      (<SpellBooksService>this.DataService!).EditSpell(input).subscribe({
-        next(value: any){
-          console.log(value);
-        }
-      });
+      this.DataService?.MutateValue(input, this.mutationResponses);
     }
     this.DataService?.UpdateValues();
     console.log(this.cardContent);
@@ -168,20 +172,7 @@ export class DataCardComponent implements OnInit{
             onlySelf: true,
             emitEvent: false
           });
-          // _['children']!['0']['data']['name'] = 'Test123';
-          // node.value = value;
           console.log(value)
-          // if(node.dataPath == undefined)
-          //   return;
-          // let reference = _;
-          // for(let i = 0; i < node.dataPath!.length - 1; i++){
-          //   reference = reference[node.dataPath[i]];
-          // }
-          // let lastKey = node.dataPath[node.dataPath.length - 1];
-          // if(lastKey != 'source'){
-          //   reference[node.dataPath[node.dataPath.length - 1]] = value;
-          //   node.value = value;
-          // }
         }
       });
       this.inputControls.push({node: node, control: control});

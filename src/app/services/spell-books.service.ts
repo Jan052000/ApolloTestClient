@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
 import * as GraphQLClasses from '../../../graphql';
+import * as QueryStrings from '../Classes/QueryStrings';
 import { CustomQueryService } from '../CustomQueryService/custom-query.service';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,29 +14,37 @@ export class SpellBooksService implements IDataService {
   public DataObservable: Subject<TreeNode[]> = new Subject<TreeNode[]>();
   /**Internal list of book names */
   private listOfBooks: Array<string> = [];
+  /**Subject for getting list of books */
+  private listOfBooksSubject: Subject<any> = new Subject<any>();
+  /**Subject to get data in treeformat */
+  private DataObjectSubject: Subject<any> = new Subject<any>();
   /**Data in tree format */
   private DataObject: TreeNode[] = [];
 
   constructor(public queryService: CustomQueryService) {
+    this.listOfBooksSubject.subscribe((res) => {
+      this.listOfBooks = res.data.GetTables;
+      let query = QueryStrings.SpellBooks.GenerateQueryFromBooks(this.listOfBooks);
+    queryService.SendPostRequest({ query: query, operationName: 'Query', variables: {} }, this.DataObjectSubject);
+    });
+    this.DataObjectSubject.subscribe((result) => {
+      this.DataObject = [];
+      this.listOfBooks.forEach((book) => {
+        this.DataObject.push(this.generateNode(result.data[book], book));
+      });
+      this.DataObservable.next(this.DataObject);
+    });
     this.UpdateValues();
   }
 
-  UpdateValues(){
-    this.queryService.getListOfBooks().subscribe((res) => {
-      this.listOfBooks = [];
-      res.data.GetTables.forEach((book: string) => {
-        this.listOfBooks.push(book);
-      });
-      this.queryService
-        .getDataForBooks(res.data.GetTables)
-        ?.subscribe((result) => {
-          this.DataObject = [];
-          this.listOfBooks.forEach((book) => {
-            this.DataObject.push(this.generateNode(result.data[book], book));
-          });
-          this.DataObservable.next(this.DataObject);
-        });
-    });
+  /**
+   * Updates values from graphql server
+   */
+  UpdateValues() {
+    this.queryService.SendPostRequest(
+      { query: QueryStrings.SpellBooks.GetTables, operationName: 'Test', variables: {} },
+      this.listOfBooksSubject
+    );
   }
 
   /**
@@ -62,9 +71,12 @@ export class SpellBooksService implements IDataService {
     return test;
   }
 
-  public EditSpell(
-    input: GraphQLClasses.MutationInputData
-  ): Observable<Response> {
-    return this.queryService.editBook(input);
+  /**
+   * Mutates a spell oresponding to the object described in input
+   * @param input data to be passed as argument to the mutation query
+   * @param subject subject to emit the data to
+   */
+  public MutateValue(input: GraphQLClasses.MutationInputData, subject: Subject<GraphQLClasses.Response>) {
+    this.queryService.SendPostRequest({query: QueryStrings.SpellBooks.GenerateMutationString(input), operationName: 'Mutation', variables: {}}, subject);
   }
 }
