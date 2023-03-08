@@ -30,7 +30,7 @@ export class TreeComponent implements OnInit {
       throw(new Error('Data service is undefined!'));
     }
     this.dataService.DataObservable.subscribe(data => {
-      this.dataSource.data = data
+      this.dataSource.data = data;
     });
   }
 

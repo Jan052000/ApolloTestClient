@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { DataNode } from '../Classes/data-node';
 import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
+import { SpellBooksService } from '../services/spell-books.service';
 
 @Component({
   selector: 'app-data-card',
@@ -38,7 +39,7 @@ export class DataCardComponent implements OnInit{
   get cardContent(): TreeNode{
     return this._cardContent!;
   }
-  @Input() DataService?: any;
+  @Input() DataService?: IDataService;
 
   /**Data displayed by the card */
   public cardData!: DataNode;
@@ -138,12 +139,14 @@ export class DataCardComponent implements OnInit{
       });
       if(Object.keys(input.data).length == 0)
         return;
-      this.DataService.EditSpell(input).subscribe({
+      (<SpellBooksService>this.DataService!).EditSpell(input).subscribe({
         next(value: any){
           console.log(value);
         }
-      })
+      });
     }
+    this.DataService?.UpdateValues();
+    console.log(this.cardContent);
   }
 
   /**

@@ -17,23 +17,25 @@ export class SpellBooksService implements IDataService {
   private DataObject: TreeNode[] = [];
 
   constructor(public queryService: CustomQueryService) {
+    this.UpdateValues();
+  }
+
+  UpdateValues(){
     this.queryService.getListOfBooks().subscribe((res) => {
+      this.listOfBooks = [];
       res.data.GetTables.forEach((book: string) => {
         this.listOfBooks.push(book);
       });
       this.queryService
         .getDataForBooks(res.data.GetTables)
         ?.subscribe((result) => {
+          this.DataObject = [];
           this.listOfBooks.forEach((book) => {
             this.DataObject.push(this.generateNode(result.data[book], book));
           });
           this.DataObservable.next(this.DataObject);
         });
     });
-  }
-
-  UpdateValues() {
-    throw new Error('Method not implemented.');
   }
 
   /**
