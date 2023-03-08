@@ -2,16 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
+import { PostData } from '../Classes/CustomQueryClasses';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
-
-export interface PostData{
-  query: string,
-  operationName: string,
-  variables: Object
-}
 
 @Injectable({
   providedIn: 'root'

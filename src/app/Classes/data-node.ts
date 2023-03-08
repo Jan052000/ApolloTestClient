@@ -4,4 +4,4 @@ export interface DataNode {
     value?: any;
     isName?: boolean | undefined;
     dataPath?: string[];
-  }
+}

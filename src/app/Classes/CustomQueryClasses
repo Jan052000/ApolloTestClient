@@ -1,4 +1,0 @@
-export class TreeNode{
-    name: string;
-    spell: [any];
-}

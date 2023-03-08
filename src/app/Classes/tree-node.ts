@@ -3,4 +3,4 @@ export interface TreeNode {
     children?: TreeNode[];
     data?: any;
     parent?: TreeNode;
-  }
+}
