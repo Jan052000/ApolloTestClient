@@ -22,19 +22,9 @@ export class TreeComponent implements OnInit {
   public dataSource = new MatTreeNestedDataSource<TreeNode>();
   /**TreeControl for the tree */
   public treeControl = new NestedTreeControl<TreeNode>(node => node.children);
+  private initialized = false;
   
-  constructor(private location: Location) {
-    location.onUrlChange((url, state) => {
-      console.log(url.replace('/', ' ').trim().split('/'));
-      let path = url.replace('/', ' ').trim().split('/');
-      let bookNode = this.dataSource.data.find(book => book.name == path[0])
-      if(bookNode == undefined)
-        return;
-      let spellNode = bookNode?.children?.find(node => node.name == path[1]);
-      if(spellNode == undefined)
-        return;
-    })
-  }
+  constructor(private location: Location) {}
 
   ngOnInit(): void {
     if(this.dataService == undefined || this.dataService == null){
@@ -42,7 +32,19 @@ export class TreeComponent implements OnInit {
     }
     this.dataService.DataObservable.subscribe(data => {
       this.dataSource.data = data;
+      if (this.initialized) {
+        console.log(this.location.path().replace('/', ' ').trim().replace('%20', ' ').split('/'))
+        let path = this.location.path().replace('/', ' ').trim().replace('%20', ' ').split('/');
+        let bookNode = this.dataSource.data.find((book) => book.name == path[0]);
+        if (bookNode == undefined) return;
+        let spellNode = bookNode?.children?.find((node) => node.name == path[1]);
+        if (spellNode == undefined || spellNode.parent == undefined) return;
+        this.treeControl.expand((<TreeNode>spellNode.parent));
+        this.selectedNode = spellNode;
+        this.onSelectionChanged.next(this.selectedNode);
+      }
     });
+    this.initialized = true;
   }
 
   /**

@@ -35,9 +35,9 @@ export class DataCardComponent implements OnInit{
         dataPath: ['children', '0', 'data', 'name']
       }))
     }
-    console.log(this.cardContent);
-    console.log(this.cardData);
-    this.readonly = true;
+    // console.log(this.cardContent);
+    // console.log(this.cardData);
+    // this.readonly = true;
   }
   get cardContent(): TreeNode{
     return this._cardContent!;
