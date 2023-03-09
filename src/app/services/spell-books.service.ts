@@ -76,7 +76,7 @@ export class SpellBooksService implements IDataService {
    * @param input data to be passed as argument to the mutation query
    * @param subject subject to emit the data to
    */
-  public MutateValue(input: GraphQLClasses.MutationInputData, subject: Subject<GraphQLClasses.Response>) {
+  public MutateValue<SpellMutationResponse>(input: GraphQLClasses.MutationInputData, subject: Subject<SpellMutationResponse>) {
     this.queryService.SendPostRequest({query: QueryStrings.SpellBooks.GenerateMutationString(input), operationName: 'Mutation', variables: {}}, subject);
   }
 }

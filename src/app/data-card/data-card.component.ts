@@ -5,6 +5,8 @@ import { DataNode } from '../Classes/data-node';
 import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
 import * as GraphQLClasses from '../../../graphql';
+import { Location } from '@angular/common';
+import { SpellMutationResponse } from '../Classes/CustomQueryClasses';
 
 @Component({
   selector: 'app-data-card',
@@ -49,11 +51,12 @@ export class DataCardComponent implements OnInit{
   /**List of form controls */
   public inputControls: {node: DataNode, control: FormControl}[] = [];
   /**Subject for mutation responses */
-  public mutationResponses: Subject<GraphQLClasses.Response> = new Subject<GraphQLClasses.Response>()
+  public mutationResponses: Subject<SpellMutationResponse> = new Subject<SpellMutationResponse>()
 
-  constructor() {
+  constructor(private location: Location) {
     this.mutationResponses.subscribe((response) => {
-      console.log(response);
+      if(response.data != null)
+        location.replaceState('Spells' + response.data.editSpell.data?.source + '/' + response.data.editSpell.data?.name);
     });
   }
 

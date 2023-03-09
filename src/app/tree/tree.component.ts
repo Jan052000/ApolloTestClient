@@ -1,4 +1,5 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
+import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { IDataService } from '../Classes/idata-service';
@@ -22,7 +23,17 @@ export class TreeComponent implements OnInit {
   /**TreeControl for the tree */
   public treeControl = new NestedTreeControl<TreeNode>(node => node.children);
   
-  constructor() {
+  constructor(private location: Location) {
+    location.onUrlChange((url, state) => {
+      console.log(url.replace('/', ' ').trim().split('/'));
+      let path = url.replace('/', ' ').trim().split('/');
+      let bookNode = this.dataSource.data.find(book => book.name == path[0])
+      if(bookNode == undefined)
+        return;
+      let spellNode = bookNode?.children?.find(node => node.name == path[1]);
+      if(spellNode == undefined)
+        return;
+    })
   }
 
   ngOnInit(): void {
@@ -46,12 +57,19 @@ export class TreeComponent implements OnInit {
    * Selects a node
    * @param node node to be selected
    */
-  select(node: TreeNode){
+  select(node: TreeNode, internalURLChange: boolean){
     if(this.selectedNode == node){
       this.selectedNode = undefined;
+      this.location.replaceState('');
     }else{
-      // console.log(node);
       this.selectedNode = node;
+      if(internalURLChange){
+        if(node.parent == undefined){
+          this.location.replaceState(node.name);
+        }else{
+          this.location.replaceState('Spells' + node.data.source + '/' + node.data.name);
+        }
+      }
     }
     this.onSelectionChanged.next(node);
   }

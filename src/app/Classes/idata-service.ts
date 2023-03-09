@@ -6,5 +6,5 @@ export interface IDataService {
     //DataObject: Observable<TreeNode[]>
     DataObservable: Observable<TreeNode[]>;
     UpdateValues(): void;
-    MutateValue(input: GraphqlClasses.MutationInputData, subject: Subject<GraphqlClasses.Response>): void
+    MutateValue<T>(input: GraphqlClasses.MutationInputData, subject: Subject<T>): void
 }
