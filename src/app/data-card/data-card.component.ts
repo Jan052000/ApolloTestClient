@@ -35,9 +35,6 @@ export class DataCardComponent implements OnInit{
         dataPath: ['children', '0', 'data', 'name']
       }))
     }
-    // console.log(this.cardContent);
-    // console.log(this.cardData);
-    // this.readonly = true;
   }
   get cardContent(): TreeNode{
     return this._cardContent!;
@@ -130,21 +127,21 @@ export class DataCardComponent implements OnInit{
       let input: any = {};
       input.spellName = this.cardContent.name;
       input.bookName = this.cardContent.parent?.name;
-      input.data = {};
       this.inputControls.forEach((obj) => {
         if (!obj.control.dirty) return;
         if (obj.node.dataPath == undefined) return;
-        let inputref = input.data;
+        let inputref = input;
         let reference: any = this.cardContent;
         for (let i = 0; i < obj.node.dataPath.length - 1; i++) {
-          input[obj.node.dataPath[i]] =
-            reference[obj.node.dataPath[i]].constructor();
+          if(inputref[obj.node.dataPath[i]] == undefined)
+            inputref[obj.node.dataPath[i]] = reference[obj.node.dataPath[i]].constructor();
           reference = reference[obj.node.dataPath[i]];
-          inputref = input[obj.node.dataPath[i]];
+          inputref = inputref[obj.node.dataPath[i]];
         }
         let lastKey = obj.node.dataPath[obj.node.dataPath.length - 1];
         if (lastKey != 'source') {
-          inputref[lastKey] = obj.control.value;//reference[lastKey];
+          let type = reference[lastKey];
+          inputref[lastKey] = type.constructor(obj.control.value);
           obj.node.value = obj.control.value;
         }
       });
