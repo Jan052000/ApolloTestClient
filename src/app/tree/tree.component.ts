@@ -69,7 +69,7 @@ export class TreeComponent implements OnInit {
         if(node.parent == undefined){
           this.location.replaceState(node.name);
         }else{
-          this.location.replaceState('Spells' + node.data.source + '/' + node.data.name);
+          this.location.replaceState(<string>this.dataService?.SelectionChangeLocation(node));
         }
       }
     }

@@ -4,9 +4,7 @@ import { Subject } from 'rxjs';
 import { DataNode } from '../Classes/data-node';
 import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
-import * as GraphQLClasses from '../../../graphql';
 import { Location } from '@angular/common';
-import { SpellMutationResponse } from '../Classes/CustomQueryClasses';
 
 @Component({
   selector: 'app-data-card',
@@ -48,12 +46,13 @@ export class DataCardComponent implements OnInit{
   /**List of form controls */
   public inputControls: {node: DataNode, control: FormControl}[] = [];
   /**Subject for mutation responses */
-  public mutationResponses: Subject<SpellMutationResponse> = new Subject<SpellMutationResponse>()
+  public mutationResponses: Subject<any> = new Subject<any>()
 
   constructor(private location: Location) {
     this.mutationResponses.subscribe((response) => {
       if(response.data != null)
-        location.replaceState('Spells' + response.data.editSpell.data?.source + '/' + response.data.editSpell.data?.name);
+        // location.replaceState('Spells' + response.data.editSpell.data?.source + '/' + response.data.editSpell.data?.name);
+        location.replaceState(<string>this.DataService?.MutationChangeLocation(response))
     });
   }
 
@@ -124,30 +123,36 @@ export class DataCardComponent implements OnInit{
     console.log(this.cardContent);
     if(this.readonly){
       //Add check to see if changes should be saved
-      let input: any = {};
-      input.spellName = this.cardContent.name;
-      input.bookName = this.cardContent.parent?.name;
-      this.inputControls.forEach((obj) => {
-        if (!obj.control.dirty) return;
-        if (obj.node.dataPath == undefined) return;
-        let inputref = input;
-        let reference: any = this.cardContent;
-        for (let i = 0; i < obj.node.dataPath.length - 1; i++) {
-          if(inputref[obj.node.dataPath[i]] == undefined)
-            inputref[obj.node.dataPath[i]] = reference[obj.node.dataPath[i]].constructor();
-          reference = reference[obj.node.dataPath[i]];
-          inputref = inputref[obj.node.dataPath[i]];
-        }
-        let lastKey = obj.node.dataPath[obj.node.dataPath.length - 1];
-        if (lastKey != 'source') {
-          let type = reference[lastKey];
-          inputref[lastKey] = type.constructor(obj.control.value);
-          obj.node.value = obj.control.value;
-        }
-      });
-      if(Object.keys(input.data).length == 0)
-        return;
-      this.DataService?.MutateValue(input, this.mutationResponses);
+      // let input: any = {};
+      // input.spellName = this.cardContent.name;
+      // input.bookName = this.cardContent.parent?.name;
+      // this.inputControls.forEach((obj) => {
+      //   if (!obj.control.dirty) return;
+      //   if (obj.node.dataPath == undefined) return;
+      //   let inputref = input;
+      //   let reference: any = this.cardContent;
+      //   for (let i = 0; i < obj.node.dataPath.length - 1; i++) {
+      //     if(inputref[obj.node.dataPath[i]] == undefined)
+      //       inputref[obj.node.dataPath[i]] = reference[obj.node.dataPath[i]].constructor();
+      //     reference = reference[obj.node.dataPath[i]];
+      //     inputref = inputref[obj.node.dataPath[i]];
+      //   }
+      //   let lastKey = obj.node.dataPath[obj.node.dataPath.length - 1];
+      //   if (this.DataService?.readOnlyKeys.find(roKey => roKey == lastKey) == undefined) {
+      //     let type = reference[lastKey];
+      //     inputref[lastKey] = type.constructor(obj.control.value);
+      //     obj.node.value = obj.control.value;
+      //   }else{
+      //     obj.control.setValue(obj.node.value, {
+      //       emitEvent: false,
+      //       onlySelf: true
+      //     });
+      //   }
+      // });
+      // if(Object.keys(input.data).length == 0)
+      //   return;
+      // this.DataService?.MutateValue(input, this.mutationResponses);
+      this.DataService?.EditButtonPressed(this.cardContent, this.inputControls, this.mutationResponses);
     }
     this.DataService?.UpdateValues();
     console.log(this.cardContent);
