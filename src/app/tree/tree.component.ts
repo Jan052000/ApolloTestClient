@@ -59,7 +59,7 @@ export class TreeComponent implements OnInit {
    * Selects a node
    * @param node node to be selected
    */
-  select(node: TreeNode, internalURLChange: boolean){
+  select(node: TreeNode, internalURLChange: boolean, event: any){
     if(this.selectedNode == node){
       this.selectedNode = undefined;
       this.location.replaceState('');
@@ -74,5 +74,6 @@ export class TreeComponent implements OnInit {
       }
     }
     this.onSelectionChanged.next(node);
+    event?.stopPropagation();
   }
 }
