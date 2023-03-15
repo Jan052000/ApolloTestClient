@@ -123,39 +123,39 @@ export class DataCardComponent implements OnInit{
     console.log(this.cardContent);
     if(this.readonly){
       //Add check to see if changes should be saved
-      // let input: any = {};
-      // input.spellName = this.cardContent.name;
-      // input.bookName = this.cardContent.parent?.name;
-      // this.inputControls.forEach((obj) => {
-      //   if (!obj.control.dirty) return;
-      //   if (obj.node.dataPath == undefined) return;
-      //   let inputref = input;
-      //   let reference: any = this.cardContent;
-      //   for (let i = 0; i < obj.node.dataPath.length - 1; i++) {
-      //     if(inputref[obj.node.dataPath[i]] == undefined)
-      //       inputref[obj.node.dataPath[i]] = reference[obj.node.dataPath[i]].constructor();
-      //     reference = reference[obj.node.dataPath[i]];
-      //     inputref = inputref[obj.node.dataPath[i]];
-      //   }
-      //   let lastKey = obj.node.dataPath[obj.node.dataPath.length - 1];
-      //   if (this.DataService?.readOnlyKeys.find(roKey => roKey == lastKey) == undefined) {
-      //     let type = reference[lastKey];
-      //     inputref[lastKey] = type.constructor(obj.control.value);
-      //     obj.node.value = obj.control.value;
-      //   }else{
-      //     obj.control.setValue(obj.node.value, {
-      //       emitEvent: false,
-      //       onlySelf: true
-      //     });
-      //   }
-      // });
-      // if(Object.keys(input.data).length == 0)
-      //   return;
-      // this.DataService?.MutateValue(input, this.mutationResponses);
-      this.DataService?.EditButtonPressed(this.cardContent, this.inputControls, this.mutationResponses);
+      let input: any = this.DataService?.MutationData(this.cardContent);
+      if(input.data == undefined)
+        input.data = {};
+      this.inputControls.forEach((obj) => {
+        if (!obj.control.dirty) return;
+        if (obj.node.dataPath == undefined) return;
+        let inputref = input;
+        let reference: any = this.cardContent;
+        for (let i = 0; i < obj.node.dataPath.length - 1; i++) {
+          if(inputref[obj.node.dataPath[i]] == undefined)
+            inputref[obj.node.dataPath[i]] = reference[obj.node.dataPath[i]].constructor();
+          reference = reference[obj.node.dataPath[i]];
+          inputref = inputref[obj.node.dataPath[i]];
+        }
+        let lastKey = obj.node.dataPath[obj.node.dataPath.length - 1];
+        if (this.DataService?.readOnlyKeys.find(roKey => roKey == lastKey) == undefined) {
+          let type = reference[lastKey];
+          inputref[lastKey] = type.constructor(obj.control.value);
+          obj.node.value = obj.control.value;
+        }else{
+          obj.control.setValue(obj.node.value, {
+            emitEvent: false,
+            onlySelf: true
+          });
+        }
+      });
+      if(Object.keys(input.data).length == 0)
+        return;
+      this.DataService?.MutateValue(input, this.mutationResponses);
+      // this.DataService?.EditButtonPressed(this.cardContent, this.inputControls, this.mutationResponses);
     }
     this.DataService?.UpdateValues();
-    console.log(this.cardContent);
+    // console.log(this.cardContent);
   }
 
   /**

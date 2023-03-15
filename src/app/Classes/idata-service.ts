@@ -34,10 +34,8 @@ export interface IDataService {
      */
     SelectionChangeLocation(input: TreeNode): string;
     /**
-     * Is called when edit button in data card is clicked
-     * @param input Current selected treenode
-     * @param controls List of form controls coresponding data nodes
-     * @param callBack Listener to mutation response
+     * Generates input data object Template for mutating data
+     * @param input content object of data card
      */
-    EditButtonPressed(input: TreeNode, controls: {node: DataNode, control: FormControl}[], callBack: Subject<any>): void;
+    MutationData(input: any): any & {data: Object};
 }
