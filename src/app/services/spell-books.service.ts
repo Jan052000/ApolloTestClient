@@ -124,4 +124,12 @@ export class SpellBooksService implements IDataService {
         return;
       this.MutateValue(mutationData, callBack);
   }
+
+  public MutationData(input: any) {
+    return {
+      data: {},
+      spellName: input.name,
+      bookName: input.parent?.name
+    }
+  }
 }
