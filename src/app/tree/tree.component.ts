@@ -30,20 +30,36 @@ export class TreeComponent implements OnInit {
     if(this.dataService == undefined || this.dataService == null){
       throw(new Error('Data service is undefined!'));
     }
+    // console.log(this.dataService)
     this.dataService.DataObservable.subscribe(data => {
       this.dataSource.data = data;
       if (this.initialized) {
-        console.log(this.location.path().replace('/', ' ').trim().replace('%20', ' ').split('/'))
-        let path = this.location.path().replace('/', ' ').trim().replace('%20', ' ').split('/');
-        let bookNode = this.dataSource.data.find((book) => book.name == path[0]);
-        if (bookNode == undefined) return;
-        let spellNode = bookNode?.children?.find((node) => node.name == path[1]);
-        if (spellNode == undefined || spellNode.parent == undefined) return;
-        this.treeControl.expand((<TreeNode>spellNode.parent));
-        this.selectedNode = spellNode;
+        console.log(this.location.path().replace('/', ' ').trim().replace('%20', ' ').replace('%C3%B6', 'ö').split('/'))
+        let path = this.location.path().replace('/', ' ').trim().replace('%20', ' ').replace('%C3%B6', 'ö').split('/');
+        // let bookNode = this.dataSource.data.find((book) => book.name == path[0]);
+        // if (bookNode == undefined) return;
+        // let spellNode = bookNode?.children?.find((node) => node.name == path[1]);
+        // if (spellNode == undefined || spellNode.parent == undefined) return;
+        let foundNode = this.dataSource.data.find(node => node.name == path[0]);
+        if(foundNode == undefined) return;
+        for(let i = 1; i < path.length; i++){
+          foundNode = foundNode?.children?.find(child => child.name == path[i]);
+          if(foundNode == undefined){
+            return;
+          }
+        }
+        this.selectedNode = foundNode;
+        while(foundNode.parent != undefined){
+          this.treeControl.expand(foundNode);
+          foundNode = foundNode?.parent;
+        }
+        this.treeControl.expand(foundNode)
+        // this.treeControl.expand((<TreeNode>foundNode.parent));
         this.onSelectionChanged.next(this.selectedNode);
       }
     });
+    if(this.dataSource.data.length == 0)
+      this.dataService.UpdateValues();
     this.initialized = true;
   }
 
@@ -59,7 +75,7 @@ export class TreeComponent implements OnInit {
    * Selects a node
    * @param node node to be selected
    */
-  select(node: TreeNode, internalURLChange: boolean){
+  select(node: TreeNode, internalURLChange: boolean, event: any){
     if(this.selectedNode == node){
       this.selectedNode = undefined;
       this.location.replaceState('');
@@ -69,10 +85,11 @@ export class TreeComponent implements OnInit {
         if(node.parent == undefined){
           this.location.replaceState(node.name);
         }else{
-          this.location.replaceState('Spells' + node.data.source + '/' + node.data.name);
+          this.location.replaceState(<string>this.dataService?.SelectionChangeLocation(node));
         }
       }
     }
     this.onSelectionChanged.next(node);
+    event?.stopPropagation();
   }
 }

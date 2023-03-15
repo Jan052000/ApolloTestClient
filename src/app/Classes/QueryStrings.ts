@@ -1,4 +1,4 @@
-import * as SpellClasses from '../../../graphql';
+import { MutationInputData } from '../../../graphql';
 
 /**
  * Strings and functions that represent queries for the test apollo server spell book section
@@ -66,7 +66,7 @@ export namespace SpellBooks {
    * @param input data to be passed as an argument in mutation query
    * @returns query string
    */
-  export function GenerateMutationString(input: SpellClasses.MutationInputData): string {
+  export function GenerateMutationString(input: MutationInputData): string {
     return `mutation Mutation{
         editSpell(data: {
           `+ stringifyObject(input) + `

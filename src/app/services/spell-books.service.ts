@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { IDataService } from '../Classes/idata-service';
 import { TreeNode } from '../Classes/tree-node';
-import * as GraphQLClasses from '../../../graphql';
+import { MutationInputData, Spells} from '../../../graphql';
 import * as QueryStrings from '../Classes/QueryStrings';
 import { CustomQueryService } from '../CustomQueryService/custom-query.service';
 import { Subject } from 'rxjs';
+import { SpellMutationResponse } from '../Classes/CustomQueryClasses';
+import { FormControl } from '@angular/forms';
+import { DataNode } from '../Classes/data-node';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +39,7 @@ export class SpellBooksService implements IDataService {
     });
     this.UpdateValues();
   }
+  readOnlyKeys: String[] = ['source'];
 
   /**
    * Updates values from graphql server
@@ -54,7 +58,7 @@ export class SpellBooksService implements IDataService {
    * @returns filled node
    */
   private generateNode(
-    spellList: GraphQLClasses.Spells,
+    spellList: Spells,
     name: string
   ): TreeNode {
     let test: TreeNode = {
@@ -76,7 +80,48 @@ export class SpellBooksService implements IDataService {
    * @param input data to be passed as argument to the mutation query
    * @param subject subject to emit the data to
    */
-  public MutateValue<SpellMutationResponse>(input: GraphQLClasses.MutationInputData, subject: Subject<SpellMutationResponse>) {
+  public MutateValue<SpellMutationResponse>(input: MutationInputData, subject: Subject<SpellMutationResponse>) {
     this.queryService.SendPostRequest({query: QueryStrings.SpellBooks.GenerateMutationString(input), operationName: 'Mutation', variables: {}}, subject);
+  }
+
+  public MutationChangeLocation(input: any): string {
+    let response = input as SpellMutationResponse
+    return 'Spells' + response.data.editSpell.data?.source + '/' + response.data.editSpell.data?.name
+  }
+
+  public SelectionChangeLocation(input: TreeNode): string {
+    return 'Spells' + input.data.source + '/' + input.data.name
+  }
+
+  public EditButtonPressed(input: TreeNode, controls: { node: DataNode; control: FormControl; }[], callBack: Subject<any>): void {
+    let mutationData: any = {};
+      mutationData.spellName = input.name;
+      mutationData.bookName = input.parent?.name;
+      controls.forEach((obj) => {
+        if (!obj.control.dirty) return;
+        if (obj.node.dataPath == undefined) return;
+        let inputref = mutationData;
+        let reference: any = input;
+        for (let i = 0; i < obj.node.dataPath.length - 1; i++) {
+          if(inputref[obj.node.dataPath[i]] == undefined)
+            inputref[obj.node.dataPath[i]] = reference[obj.node.dataPath[i]].constructor();
+          reference = reference[obj.node.dataPath[i]];
+          inputref = inputref[obj.node.dataPath[i]];
+        }
+        let lastKey = obj.node.dataPath[obj.node.dataPath.length - 1];
+        if (this.readOnlyKeys.find(roKey => roKey == lastKey) == undefined) {
+          let type = reference[lastKey];
+          inputref[lastKey] = type.constructor(obj.control.value);
+          obj.node.value = obj.control.value;
+        }else{
+          obj.control.setValue(obj.node.value, {
+            emitEvent: false,
+            onlySelf: true
+          });
+        }
+      });
+      if(Object.keys(mutationData.data).length == 0)
+        return;
+      this.MutateValue(mutationData, callBack);
   }
 }
