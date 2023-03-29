@@ -37,5 +37,5 @@ export interface IDataService {
      * Generates input data object Template for mutating data
      * @param input content object of data card
      */
-    MutationData(input: any): any & {data: Object};
+    MutationData(input: any): {data: Object};
 }

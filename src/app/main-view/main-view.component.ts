@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TreeNode } from '../Classes/tree-node';
 import { CustomQueryService } from '../CustomQueryService/custom-query.service';
+import { FamilyService } from '../services/family.service';
 import { SpellBooksService } from '../services/spell-books.service';
 
 @Component({
@@ -15,7 +16,7 @@ export class MainViewComponent implements OnInit {
   /**Selected node from tree */
   public treeSelectedNode!: TreeNode;
 
-  constructor(public customQueryService: CustomQueryService) {
+  constructor(public customQueryService: CustomQueryService, public familyService: FamilyService) {
     this.SpellBookService = new SpellBooksService(customQueryService);
    }
 

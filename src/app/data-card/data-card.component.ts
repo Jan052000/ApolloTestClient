@@ -123,13 +123,13 @@ export class DataCardComponent implements OnInit{
     console.log(this.cardContent);
     if(this.readonly){
       //Add check to see if changes should be saved
-      let input: any = this.DataService?.MutationData(this.cardContent);
+      let input = this.DataService!.MutationData(this.cardContent);
       if(input.data == undefined)
         input.data = {};
       this.inputControls.forEach((obj) => {
         if (!obj.control.dirty) return;
         if (obj.node.dataPath == undefined) return;
-        let inputref = input;
+        let inputref: any = input;
         let reference: any = this.cardContent;
         for (let i = 0; i < obj.node.dataPath.length - 1; i++) {
           if(inputref[obj.node.dataPath[i]] == undefined)

@@ -11,3 +11,12 @@ export interface SpellMutationResponse{
         editSpell: Response
     }
 }
+
+export namespace FamilyTree{
+    export interface Person{
+        Name: string,
+        Id: string,
+        Age: number,
+        Children: Person[]
+    }
+}
