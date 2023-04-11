@@ -6,6 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+    "test": "ng test",
     "generate": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen"
   },
   "private": true,

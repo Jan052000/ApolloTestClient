@@ -111,7 +111,7 @@ export class DataCardComponent implements OnInit{
    */
   isName(input: any): boolean{
     if(input != undefined)
-      return input;
+      return true;
     return false;
   }
 

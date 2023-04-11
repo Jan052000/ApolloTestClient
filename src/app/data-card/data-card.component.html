@@ -5,7 +5,7 @@
     <mat-card-content>
         <ng-template #nodeTemplateRef let-node="node">
             <div class="box">
-                <mat-label *ngIf="!isNumber(node.displayText) && node.children.length > 0 && !isName(node.isName) && node.displayText != ''" class="spacer">{{ node.displayText }}</mat-label>
+                <mat-label *ngIf="!isNumber(node.displayText) && node.children.length > 0 && !isName(node.name) && node.displayText != ''" class="spacer">{{ node.displayText }}</mat-label>
                 <div class="block-layout">
                     <mat-form-field appearance="fill" floatLabel="always" *ngIf="node.value != undefined">
                         <mat-label>{{ node.displayText }}</mat-label>

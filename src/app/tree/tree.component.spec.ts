@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TreeComponent } from './tree.component';
+import { FamilyService } from '../services/family.service';
 
 describe('TreeComponent', () => {
   let component: TreeComponent;
@@ -16,6 +17,7 @@ describe('TreeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TreeComponent);
     component = fixture.componentInstance;
+    component.dataService = new FamilyService();
     fixture.detectChanges();
   });
 
