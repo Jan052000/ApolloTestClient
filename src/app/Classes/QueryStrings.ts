@@ -22,44 +22,46 @@ export namespace SpellBooks {
   export function GenerateQueryFromBooks(listOfBooks: string[]): string {
     let query = `query Query {\n`;
     listOfBooks.forEach((book) => {
-      query += '\t' + book.replace('"', '') + ` {
-        spell {
-          name,
-          entries,
-          source,
-          page,
-          level,
-          school,
-          range {
-            type,
-            distance {
-              amount,
-              type
-            }
-          },
-          duration {
-            type
-          },
-          classes {
-            fromClassList {
-              name
-            },
-            fromClassListVariant {
-              name
-            }
-          },
-          time {
-            Int,
-            unit
-          }
-        }
-      },
-      `;
+      query += '\t' + book.replace('"', '') + GenerateQueryFromBooksEnd;
     });
     query = query.substring(0, query.length - 1);
     query += `\n}`;
     return query;
   }
+
+  export const GenerateQueryFromBooksEnd = ` {
+    spell {
+      name,
+      entries,
+      source,
+      page,
+      level,
+      school,
+      range {
+        type,
+        distance {
+          amount,
+          type
+        }
+      },
+      duration {
+        type
+      },
+      classes {
+        fromClassList {
+          name
+        },
+        fromClassListVariant {
+          name
+        }
+      },
+      time {
+        Int,
+        unit
+      }
+    }
+  },
+  `;
 
   /**
    * Generates a query string for mutating a spell
