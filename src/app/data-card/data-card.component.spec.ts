@@ -1,10 +1,15 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  ComponentFixtureAutoDetect,
+  TestBed,
+} from '@angular/core/testing';
 
 import { DataCardComponent } from './data-card.component';
 import { DataNode } from '../Classes/data-node';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { TreeNode } from '../Classes/tree-node';
+import { By } from '@angular/platform-browser';
 
 describe('DataCardComponent', () => {
   let component: DataCardComponent;
@@ -13,6 +18,7 @@ describe('DataCardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DataCardComponent],
+      providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }],
     }).compileComponents();
   });
 
@@ -155,5 +161,36 @@ describe('DataCardComponent', () => {
     //End edit
     component.editButtonPressed();
     expect(component.cardData.children[0].value).toBe('Test1');
+  });
+
+  it('should change icon of edit button', () => {
+    component.cardContent = {
+      name: 'Test',
+      data: {
+        test: 1,
+        name: 'Test',
+        isTesting: true,
+      },
+    };
+    let dButton = fixture.debugElement.query(By.css('.sticky'));
+    expect(dButton).toBeTruthy();
+
+    let button: HTMLElement = fixture.nativeElement.querySelector('button');
+
+    expect(component.readonly).toBeTrue();
+    expect(button.children.length).toBe(1);
+    expect(button.children[0].innerHTML).toBe('edit');
+    // dButton.triggerEventHandler('click', {});
+    button.dispatchEvent(new Event('click'));
+
+    expect(component.readonly).toBeFalse();
+    expect(button.children.length).toBe(1);
+    expect(button.children[0].innerHTML).toBe('save');
+    // dButton.triggerEventHandler('click', {});
+    button.dispatchEvent(new Event('click'));
+
+    expect(component.readonly).toBeTrue();
+    expect(button.children.length).toBe(1);
+    expect(button.children[0].innerHTML).toBe('edit');
   });
 });
