@@ -82,6 +82,13 @@ describe('DataCardComponent', () => {
     expect(component.parseObjectToNode(node.name, node, [node.name])).toEqual(
       nodeResult
     );
+    let baseNode: DataNode = {
+      displayText: '',
+      children: [],
+      dataPath: []
+    };
+    expect(component.parseObjectToNode('', null, [])).toEqual(baseNode);
+    expect(component.parseObjectToNode('', undefined, [])).toEqual(baseNode);
   });
 
   it('should register new FormControl', () => {
